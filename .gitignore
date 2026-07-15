@@ -1,0 +1,63 @@
+
+# Dependencies
+node_modules/
+
+# Environment files and local secrets
+.env
+.env.local
+.env.*.local
+*.local.json
+projects/academyBugs/
+projects/academyBugs/automation/utils/env.ts
+
+# Playwright generated output
+/artifacts/
+/test-results/
+/playwright-report/
+/blob-report/
+/traces/
+/videos/
+/screenshots/
+
+# Playwright auth/session artifacts
+**/auth/*.json
+**/*.har
+**/*.zip
+
+# Example test files
+**/example.spec.ts
+**/example*.spec.ts
+**/example*.ts
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.iml
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+.history/
+
+# Coverage reports
+coverage/
+
+
+# Allure
+allure-results/
+allure-report/
+
+
