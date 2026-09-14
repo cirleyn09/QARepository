@@ -1,0 +1,35 @@
+{
+  "cookies": [
+    {
+      "name": "theme",
+      "value": "light",
+      "domain": ".qa-practice.dev",
+      "path": "/",
+      "expires": 1820008870.499178,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "auth_token",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbXRpdWJ0eWkwMDAwMDRsYXludHV5cmdkIiwiZW1haWwiOiJjaXJsZXluMDlAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3ODg0NzI4NzYsImV4cCI6MTc4OTA3NzY3Nn0.GAheS5rr65KpM4ZT3PlNPrxTIlf7A_9Le2YbfhxUSAU",
+      "domain": "fullstack.qa-practice.dev",
+      "path": "/",
+      "expires": 1789077676.017643,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://fullstack.qa-practice.dev",
+      "localStorage": [
+        {
+          "name": "ecommerce-cart",
+          "value": "[]"
+        }
+      ]
+    }
+  ]
+}

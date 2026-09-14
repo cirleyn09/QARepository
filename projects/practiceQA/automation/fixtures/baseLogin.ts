@@ -1,0 +1,19 @@
+import { test as base } from '@playwright/test';
+import { LoginPage } from '../pages/loginPage';
+
+type MyFixtures = {
+    loginPage: LoginPage;
+};
+
+export const test = base.extend<MyFixtures>({
+    loginPage: async ({ page }, use) => {
+        await page.goto('/login');
+
+        const loginPage = new LoginPage(page);
+
+
+        await use(loginPage);
+    },
+});
+
+export { expect } from '@playwright/test';

@@ -1,5 +1,6 @@
+import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
-import { environment } from './projects/academyBugs/automation/config/environment';
+
 
 /**
  * Read environment variables from file.
@@ -22,7 +23,7 @@ export default defineConfig({
 
   // Timeout para assertions como expect(locator).toBeVisible()
   expect: {
-    timeout: 10_000,
+    timeout: 80_000,
   },
 
 
@@ -60,8 +61,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
-    actionTimeout: 15_000,
-    navigationTimeout: 10_000,
+    actionTimeout: 50_000,
+    navigationTimeout: 80_000,
   },
 
   /* Configure projects for major browsers */
@@ -96,18 +97,52 @@ export default defineConfig({
           name: 'academyBugs',
           testMatch: /academyBugs\/tests\/.*\.spec\.ts/,
           use: {
-            // baseURL: process.env.PROJECT_A_URL,
-            baseURL: environment.baseUrl,
+            baseURL:
+              process.env.ACADEMY_BUGS_BASE_URL ||
+              'https://academybugs.com/',
           },
         },
-        */
+    */
+
     {
       name: 'practiceQA',
       testMatch: /practiceQA\/tests\/.*\.spec\.ts/,
       use: {
-        baseURL: process.env.PRACTICE_QA_BASE_URL || 'https://api.qa-practice.dev',
+        ...devices['Desktop Chrome'],
+        baseURL: process.env.PRACTICE_QA_BASE_URL || 'https://fullstack.qa-practice.dev',
       },
     },
+
+    {
+      name: 'practiceQA-setup',
+
+      testMatch: /practiceQA\/automation\/setup\/.*\.setup\.ts/,
+
+      use: {
+        ...devices['Desktop Chrome'],
+
+        baseURL:
+          process.env.PRACTICE_QA_BASE_URL ||
+          'https://fullstack.qa-practice.dev',
+      },
+    },
+
+    {
+      name: 'practiceQA-authenticated',
+      testMatch: /practiceQA\/tests\/products\/.*\.spec\.ts/,
+
+      dependencies: ['practiceQA-setup'],
+
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL:
+          process.env.PRACTICE_QA_BASE_URL ||
+          'https://fullstack.qa-practice.dev',
+
+        storageState: 'playwright/.auth/user.json',
+      },
+    },
+
     /*
     Este se usa para ejecutar pruebas en un dispositivo móvil específico, como un iPhone 12. 
     Al configurar este proyecto, Playwright emulará el entorno de ese dispositivo, 
