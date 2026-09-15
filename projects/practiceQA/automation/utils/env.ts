@@ -1,4 +1,4 @@
-function getEnvVariable(name: string): string {
+export function getEnvVariable(name: string): string {
     const value = process.env[name];
 
     if (!value) {
@@ -9,7 +9,10 @@ function getEnvVariable(name: string): string {
 }
 
 export const practiceQAEnv = {
-    email: getEnvVariable('PRACTICE_QA_EMAIL'),
-    password: getEnvVariable('PRACTICE_QA_PASSWORD')
+    get email() {
+        return getEnvVariable('PRACTICE_QA_EMAIL');
+    },
+    get password() {
+        return getEnvVariable('PRACTICE_QA_PASSWORD');
+    }
 };
-

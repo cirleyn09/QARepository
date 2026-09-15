@@ -1,4 +1,4 @@
-import { practiceQAEnv } from '../utils/env';
+import { getEnvVariable } from '../utils/env';
 
 type UserCredentials = {
     email: string;
@@ -11,9 +11,11 @@ type TestUsers = {
 };
 
 export const users: TestUsers = {
-    validUser: {
-        email: practiceQAEnv.email,
-        password: practiceQAEnv.password
+    get validUser() {
+        return {
+            email: getEnvVariable('PRACTICE_QA_EMAIL'),
+            password: getEnvVariable('PRACTICE_QA_PASSWORD')
+        };
     },
     invalidUser: {
         email: 'wrong@test.com',
