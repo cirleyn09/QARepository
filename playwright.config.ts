@@ -116,7 +116,10 @@ export default defineConfig({
     {
       name: 'practiceQA',
       testMatch: /practiceQA\/tests\/.*\.spec\.ts/,
-      testIgnore: '**/practiceQA/tests/products/**/*.spec.ts',
+      testIgnore:
+        ['**/practiceQA/tests/products/**/*.spec.ts',
+          /.*example.*\.ts/,
+        ],
       use: {
         ...devices['Desktop Chrome'],
         baseURL: process.env.PRACTICE_QA_BASE_URL || 'https://fullstack.qa-practice.dev',
@@ -127,7 +130,7 @@ export default defineConfig({
       name: 'practiceQA-setup',
 
       testMatch: /practiceQA\/automation\/setup\/.*\.setup\.ts/,
-
+      testIgnore: /.*example.*\.ts/,
       use: {
         ...devices['Desktop Chrome'],
 
@@ -140,7 +143,7 @@ export default defineConfig({
     {
       name: 'practiceQA-authenticated',
       testMatch: /practiceQA\/tests\/products\/.*\.spec\.ts/,
-
+      testIgnore: /.*example.*\.ts/,
       dependencies: ['practiceQA-setup'],
 
       use: {

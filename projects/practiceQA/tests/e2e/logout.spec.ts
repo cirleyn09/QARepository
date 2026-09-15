@@ -6,10 +6,18 @@ test('cerrar sesion',
         tag: ['@smoke', '@regression'],
     },
     async ({ page }) => {
-
         const productsPage = new ProductsPage(page);
 
+        await test.step('Dado que estoy autenticado', async () => {
+            await expect(productsPage.logoutButton).toBeVisible();
+        });
 
-        await productsPage.logout();
+        await test.step('Cuando cierro sesion', async () => {
+            await productsPage.logout();
+        });
 
+        await test.step('Entonces debo ver la sesion cerrada', async () => {
+            await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
+            await expect(productsPage.logoutButton).toBeHidden();
+        });
     });
