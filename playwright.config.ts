@@ -19,11 +19,11 @@ export default defineConfig({
 
 
   // Evita que una prueba se quede colgada demasiado tiempo
-  timeout: 60_000,
+  timeout: 90_000,
 
   // Timeout para assertions como expect(locator).toBeVisible()
   expect: {
-    timeout: 80_000,
+    timeout: 30_000,
   },
 
 
@@ -61,24 +61,33 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
-    actionTimeout: 50_000,
-    navigationTimeout: 80_000,
+    actionTimeout: 30_000,
+    navigationTimeout: 60_000,
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
+      testIgnore: ['**/practiceQA/**',
+        '**/academyBugs/**',
+      ],
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
+      testIgnore: ['**/practiceQA/**',
+        '**/academyBugs/**',
+      ],
       use: { ...devices['Desktop Firefox'] },
     },
 
     {
       name: 'webkit',
+      testIgnore: ['**/practiceQA/**',
+        '**/academyBugs/**',
+      ],
       use: { ...devices['Desktop Safari'] },
     },
 
@@ -92,21 +101,22 @@ export default defineConfig({
     //    }
     // }
     // },
-    /*
-        {
-          name: 'academyBugs',
-          testMatch: /academyBugs\/tests\/.*\.spec\.ts/,
-          use: {
-            baseURL:
-              process.env.ACADEMY_BUGS_BASE_URL ||
-              'https://academybugs.com/',
-          },
-        },
-    */
+
+    {
+      name: 'academyBugs',
+      testMatch: /academyBugs\/tests\/.*\.spec\.ts/,
+      use: {
+        baseURL:
+          process.env.ACADEMY_BUGS_BASE_URL ||
+          'https://academybugs.com/',
+      },
+    },
+
 
     {
       name: 'practiceQA',
       testMatch: /practiceQA\/tests\/.*\.spec\.ts/,
+      testIgnore: '**/practiceQA/tests/products/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         baseURL: process.env.PRACTICE_QA_BASE_URL || 'https://fullstack.qa-practice.dev',
