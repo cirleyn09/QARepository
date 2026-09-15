@@ -12,3 +12,4 @@ export const practiceQAEnv = {
     email: getEnvVariable('PRACTICE_QA_EMAIL'),
     password: getEnvVariable('PRACTICE_QA_PASSWORD')
 };
+
