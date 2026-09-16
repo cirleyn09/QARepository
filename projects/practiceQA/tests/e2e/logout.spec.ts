@@ -20,4 +20,4 @@ test('cerrar sesion',
             await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
             await expect(productsPage.logoutButton).toBeHidden();
         });
-//});
+    });
