@@ -22,7 +22,7 @@ test.describe('Login', () => {
             });
 
             await test.step('Entonces debo ver el boton de cerrar sesion', async () => {
-                await expect(page).toHaveURL(/fullstack\.qa-practice\.dev/);
+                await expect(page).toHaveURL(/fullstack\.qa\.dev/);
                 await expect(loginPage.logoutButton).toBeVisible();
 
             });
@@ -41,4 +41,4 @@ test.describe('Login', () => {
                 await expect(loginPage.invalidCredentialsErrorMessage, 'No se muestra el mensaje de credenciales invalidas').toBeVisible();
             });
         });
-//});
+});
