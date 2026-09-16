@@ -16,7 +16,7 @@ jobs:
     env:
       PRACTICE_QA_EMAIL: ${{ secrets.PRACTICE_QA_EMAIL }}
       PRACTICE_QA_PASSWORD: ${{ secrets.PRACTICE_QA_PASSWORD }}
-      PRACTICE_QA_BASE_URL: ${{ vars.PRACTICE_QA_BASE_URL || 'https://fullstack.qa-practice.dev' }}
+   
 
     steps:
       - name: Checkout repository
