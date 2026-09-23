@@ -38,14 +38,17 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test --project=practiceQA --project=practiceQA-setup --project=practiceQA-authenticated --reporter=html
+        run: >
+          npx playwright test
+          --project=practiceQA
+          --project=practiceQA-authenticated
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           name: playwright-report
-          path: playwright-report/
+          path: artifacts/playwright-report/
           retention-days: 30
 
       - name: Upload screenshots
@@ -63,5 +66,23 @@ jobs:
         with:
           name: traces
           path: artifacts/test-results/**/trace.zip
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Upload videos
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: videos
+          path: artifacts/test-results/**/*.webm
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Upload JUnit results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: junit-results
+          path: artifacts/junit/results.xml
           if-no-files-found: ignore
           retention-days: 30

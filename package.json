@@ -1,20 +1,27 @@
 {
   "name": "qaautomation",
   "version": "1.0.0",
-  "description": "",
+  "description": "QA automation framework using Playwright and TypeScript",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:smoke": "playwright test tests/smoke",
-    "test:regression": "playwright test tests/regression",
-    "test:e2e": "playwright test tests/e2e",
     "test:api": "playwright test tests/api",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:negative": "playwright test --grep @negative",
     "test:debug": "playwright test --debug",
     "report": "playwright show-report artifacts/playwright-report",
     "codegen": "playwright codegen",
     "test:html": "playwright test --reporter=html"
   },
-  "keywords": [],
+  "keywords": [
+    "playwright",
+    "testing",
+    "qa",
+    "automation",
+    "e2e",
+    "api-testing"
+  ],
   "author": "Cirley Nava",
   "license": "ISC",
   "type": "commonjs",

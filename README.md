@@ -1,159 +1,489 @@
-# QA Automation Framework
+# Playwright QA Automation Framework
 
-[![CI](https://github.com/cirleyn09/qa-automation-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/USUARIO/REPOSITORIO/actions/workflows/ci.yml)
+[![CI](https://github.com/cirleyn09/qarepository/actions/workflows/playwright.yml/badge.svg)](https://github.com/cirleyn09/qarepository/actions/workflows/playwright.yml)
 
-Framework de automatización de pruebas (Playwright + TypeScript) diseñado
-para ejecutar suites E2E, de API y pruebas de regresión con reportes
-generados automáticamente.
+[![Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 
-## Resumen del proyecto
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 
-Este repositorio contiene la implementación de un framework de pruebas
-automatizadas con buenas prácticas: componentes reutilizables, organización
-clara de proyectos y generación de reportes. Incluye ejemplos y suites en
-`projects/**/tests` y utilidades en `projects/**/automation`.
+**Playwright QA Automation Framework** es un framework de automatización desarrollado con Playwright y TypeScript para validar aplicaciones web y APIs mediante pruebas E2E, API, Smoke, Regression y Negative Testing.
 
-## Tech Stack
+El proyecto implementa Page Object Model, fixtures reutilizables, administración de datos de prueba, autenticación mediante** **`storageState`, generación automática de evidencias y ejecución continua mediante GitHub Actions.
 
-- **Lenguaje:** TypeScript (Node.js)
-- **Framework de testing:** @playwright/test (Playwright Test)
-- **Librería de automatización:** Playwright
-- **Gestor de paquetes:** npm
-- **CI/CD:** GitHub Actions
-- **Reportes:** Playwright HTML report (artifacts/playwright-report)
+Está diseñado para ejecutar pruebas **End-to-End (E2E)** y **API**, utilizando buenas prácticas de ingeniería de pruebas, Page Object Model (POM), autenticación reutilizable, reportes automatizados e integración continua con GitHub Actions.
 
-## Estructura principal
+## Project
 
-Estructura relevante (resumida):
+**Playwright QA Automation Framework**
 
-```
-package.json
-playwright.config.ts
-projects/               # carpetas con tests y código de automatización
-	practiceQA/
-	academyBugs/
-artifacts/              # artefactos generados (reportes, screenshots, videos)
-docs/                   # documentación adicional (how-to-run-tests, environments)
-README.md
+Proyecto principal:
+
+```text
+practiceQA
 ```
 
-## Prerrequisitos
+## Technologies
 
-- Node.js >= 18 (recomendado)
-- npm
-- Git
+* Playwright
+* TypeScript
+* Node.js
+* REST APIs
+* Git
+* GitHub Actions
+* dotenv
 
-Además, para ejecutar navegadores locales con Playwright puede ser necesario
-instalar los navegadores con `npx playwright install`.
+## Architecture
 
-## Instalación
+El framework utiliza una arquitectura organizada para separar las pruebas, datos, componentes reutilizables y configuración.
+
+* **Page Object Model (POM)** — `projects/practiceQA/automation/pages`
+* **Fixtures** — `projects/practiceQA/automation/fixtures`
+* **Test Data** — `projects/practiceQA/automation/data`
+* **Utilities** — `projects/practiceQA/automation/utils`
+* **Setup / Authentication** — `projects/practiceQA/automation/setup`
+* **API Tests** — `projects/practiceQA/tests/api`
+* **E2E Tests** — `projects/practiceQA/tests/e2e`
+
+La estructura principal del proyecto es:
+
+```text
+projects/
+└── practiceQA/
+    ├── automation/
+    │   ├── pages/
+    │   ├── fixtures/
+    │   ├── data/
+    │   ├── utils/
+    │   └── setup/
+    ├── qa/
+    │   ├── bugReports/
+    │   ├── evidence/
+    │   ├── reports/
+    │   ├── testCases/
+    │   └── testPlan/
+    └── tests/
+        ├── api/
+        ├── e2e/
+        └── examples/
+```
+
+## Testing
+
+El framework contempla diferentes tipos de pruebas.
+
+### E2E Testing
+
+Pruebas de interfaz de usuario ejecutadas mediante Playwright Test.
+
+### API Testing
+
+Pruebas de servicios y endpoints REST ubicadas en:
+
+```text
+projects/practiceQA/tests/api
+```
+
+### Smoke Testing
+
+Las pruebas Smoke se identifican mediante el tag:
+
+```text
+@smoke
+```
+
+Ejecutar únicamente Smoke Tests:
 
 ```bash
-git clone https://github.com/cirleyn09/qa-automation-framework.git
-cd qa-automation-framework
+npx playwright test --grep @smoke
+```
+
+### Regression Testing
+
+Las pruebas de regresión utilizan el tag:
+
+```text
+@regression
+```
+
+Ejecutar únicamente Regression Tests:
+
+```bash
+npx playwright test --grep @regression
+```
+
+### Negative Testing
+
+Los escenarios negativos utilizan el tag:
+
+```text
+@negative
+```
+
+Ejecutar únicamente Negative Tests:
+
+```bash
+npx playwright test --grep @negative
+```
+
+## Playwright Projects
+
+La configuración de Playwright contiene diferentes proyectos para separar los tipos de ejecución.
+
+### practiceQA
+
+Ejecuta las pruebas principales del proyecto utilizando Chromium.
+
+```bash
+npx playwright test --project=practiceQA
+```
+
+### practiceQA-setup
+
+Ejecuta el proceso de configuración y autenticación necesario para las pruebas que requieren una sesión iniciada.
+
+### practiceQA-authenticated
+
+Ejecuta las pruebas que necesitan autenticación.
+
+Este proyecto utiliza:
+
+```text
+playwright/.auth/user.json
+`playwright/.auth/` debe estar incluido en `.gitignore`, ya que los archivos de autenticación pueden contener cookies, tokens y datos de sesión.
+```
+
+como estado de autenticación y depende del proyecto:
+
+```text
+practiceQA-setup
+```
+
+Puede ejecutarse con:
+
+```bash
+npx playwright test --project=practiceQA-authenticated
+```
+
+Playwright ejecutará previamente la dependencia de autenticación configurada.
+
+## Environment Variables
+
+El proyecto utiliza variables de entorno para información sensible y configuración.
+
+Las principales variables utilizadas por `practiceQA` son:
+
+```text
+PRACTICE_QA_BASE_URL
+PRACTICE_QA_EMAIL
+PRACTICE_QA_PASSWORD
+```
+
+Las credenciales no deben almacenarse directamente dentro del repositorio.
+
+En GitHub Actions se utilizan **GitHub Secrets** para:
+
+```text
+PRACTICE_QA_EMAIL
+PRACTICE_QA_PASSWORD
+```
+
+Para desarrollo local pueden configurarse mediante un archivo `.env`.
+
+Ejemplo:
+
+```env
+PRACTICE_QA_BASE_URL=https://fullstack.qa-practice.dev
+PRACTICE_QA_EMAIL=your_email
+PRACTICE_QA_PASSWORD=your_password
+```
+
+> No subir el archivo `.env` al repositorio.
+
+## Installation
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/cirleyn09/qarepository.git
+```
+
+### 2. Entrar al proyecto
+
+```bash
+cd qarepository
+```
+
+### 3. Instalar dependencias
+
+```bash
 npm install
-# Instalar navegadores de Playwright (si es necesario)
+```
+
+### 4. Instalar los navegadores de Playwright
+
+```bash
 npx playwright install
 ```
 
-## Comandos útiles
+## Running Tests
 
-- Ejecutar todas las pruebas:
+### Ejecutar todas las pruebas
 
 ```bash
 npm test
 ```
 
-- Ejecutar suites específicas (definidas en `package.json`):
+También pueden ejecutarse directamente con:
 
 ```bash
-npm run test:smoke      # pruebas smoke
-npm run test:regression # pruebas de regresión
-npm run test:e2e        # pruebas end-to-end
-npm run test:api        # pruebas de API
-npm run test:headed     # ejecuta en modo headed
-npm run test:debug      # modo debug
+npx playwright test
 ```
 
-- Generar/abrir reporte HTML local después de la ejecución:
+### Ejecutar únicamente practiceQA
+
+```bash
+npx playwright test --project=practiceQA
+```
+
+### Ejecutar pruebas autenticadas
+
+```bash
+npx playwright test --project=practiceQA-authenticated
+```
+
+### Ejecutar Smoke Tests
+
+```bash
+npx playwright test --grep @smoke
+```
+
+### Ejecutar Regression Tests
+
+```bash
+npx playwright test --grep @regression
+```
+
+### Ejecutar Negative Tests
+
+```bash
+npx playwright test --grep @negative
+```
+
+### Ejecutar un archivo específico
+
+```bash
+npx playwright test projects/practiceQA/tests/e2e/login.spec.ts
+```
+
+### Ejecutar una prueba por nombre
+
+```bash
+npx playwright test -g "nombre del test"
+```
+
+### Ejecutar en Debug Mode
+
+```bash
+npm run test:debug
+```
+
+### Playwright Codegen
+
+Para generar pruebas utilizando Playwright Codegen:
+
+```bash
+npm run codegen
+```
+
+## Reports
+
+El framework genera diferentes tipos de reportes.
+
+### HTML Report
+
+El reporte HTML se almacena en:
+
+```text
+artifacts/playwright-report/
+```
+
+Para abrirlo:
 
 ```bash
 npm run report
 ```
 
-- Generar reporte HTML (alternativa):
+También puede abrirse directamente con:
 
 ```bash
-npm run test:html
+npx playwright show-report artifacts/playwright-report
 ```
 
-Para ver ejemplos de ejecución y parámetros adicionales revise
-[docs/how-to-run-tests.md](docs/how-to-run-tests.md) y
-[docs/environments.md](docs/environments.md).
+### JUnit Report
 
-## Reportes y artefactos
+El reporte JUnit se genera en:
 
-Los resultados y artefactos se generan en:
-
-```
-artifacts/
-	playwright-report/   # reporte HTML
-	screenshots/
-	videos/
-	traces/
+```text
+artifacts/junit/results.xml
 ```
 
-Los reportes integrados se pueden abrir con `npm run report`.
+## Test Artifacts
+
+Los resultados generados durante las ejecuciones se almacenan en:
+
+```text
+artifacts/test-results/
+```
+
+Dependiendo del resultado de las pruebas pueden generarse:
+
+* Screenshots
+* Videos
+* Traces
+* Test results
+
+La configuración actual conserva:
+
+* **Screenshots** cuando una prueba falla.
+* **Videos** cuando una prueba falla.
+* **Traces** cuando una prueba falla.
+
+## Timeouts
+
+El framework utiliza los siguientes tiempos máximos:
+
+| Configuración          |      Tiempo |
+| ----------------------- | ----------: |
+| Test completo           | 90 segundos |
+| Assertions (`expect`) | 30 segundos |
+| Acciones                | 30 segundos |
+| Navegaciones            | 60 segundos |
+
+En CI, una prueba fallida puede ejecutarse nuevamente hasta **2 veces**.
 
 ## CI/CD
 
-El pipeline de CI (GitHub Actions) realiza:
+El proyecto utiliza **GitHub Actions** para ejecutar automáticamente las pruebas.
 
-1. Instalación de dependencias
-2. Ejecución de pruebas
-3. Publicación de reportes y artefactos
+El workflow se encuentra en:
 
-Revise los flujos en `.github/workflows/` si existen para ver detalles.
-
-## Flujo Git
-
-Se recomienda el siguiente flujo sencillo de ramas:
-
-```
-main
-develop
-feature/*
-fix/*
+```text
+.github/workflows/playwright.yml
 ```
 
-Desarrollar cambios en `feature/*` y solicitar PR hacia `develop`/`main`.
+El pipeline se ejecuta cuando:
 
-## Contribuciones
+* Se realiza un `push` a `main` o `master`.
+* Se crea o actualiza un Pull Request hacia `main` o `master`.
+* Se ejecuta manualmente mediante `workflow_dispatch`.
 
-1. Forkea el repositorio.
-2. Crea una rama `feature/mi-cambio`.
-3. Abre un Pull Request describiendo los cambios.
+### Pipeline
 
+El proceso de integración continua realiza los siguientes pasos:
 
+1. Descarga el repositorio.
+2. Configura Node.js.
+3. Instala las dependencias:
 
-## Integración continua
+```bash
+npm ci
+```
 
-El proyecto utiliza GitHub Actions para ejecutar automáticamente las
-validaciones de calidad en cada push y Pull Request.
+4. Valida TypeScript:
 
-El pipeline realiza las siguientes tareas:
+```bash
+npx tsc --noEmit
+```
 
-- Instalación limpia de dependencias.
-- Ejecución del linter.
-- Ejecución de pruebas automatizadas.
-- Construcción del proyecto.
-- Bloqueo de cambios cuando alguna validación falla.
+5. Instala Playwright y sus dependencias:
 
-El estado actual del pipeline puede consultarse mediante el badge de CI
-ubicado al inicio de este documento.
+```bash
+npx playwright install --with-deps
+```
 
-## Autor y contacto
+6. Ejecuta las pruebas de `practiceQA`.
+7. Ejecuta el setup requerido para las pruebas autenticadas.
+8. Ejecuta las pruebas autenticadas.
+9. Genera los reportes.
+10. Publica los artefactos generados durante la ejecución.
 
-Cirley Nava
+## CI Artifacts
 
----
+Los artefactos generados por GitHub Actions pueden incluir:
+
+* Playwright HTML Report
+* Screenshots
+* Videos
+* Traces
+* JUnit results
+
+Los artefactos del pipeline se conservan durante **30 días**.
+
+## Configuration
+
+El archivo principal de configuración es:
+
+```text
+playwright.config.ts
+```
+
+Actualmente define:
+
+* Directorio general de pruebas: `./projects`
+* Directorio de resultados: `./artifacts/test-results`
+* HTML Reporter
+* JUnit Reporter
+* Screenshots en pruebas fallidas
+* Videos en pruebas fallidas
+* Traces en pruebas fallidas
+* Retries en CI
+* Ejecución controlada de workers en CI
+* Configuración de autenticación
+* Diferentes proyectos de Playwright
+
+## Key Files
+
+* `playwright.config.ts` — configuración general de Playwright.
+* `package.json` — dependencias y scripts.
+* `.github/workflows/ci.yml` — pipeline de integración continua.
+* `projects/practiceQA/automation/pages` — Page Objects.
+* `projects/practiceQA/automation/fixtures` — fixtures.
+* `projects/practiceQA/automation/data` — datos de prueba.
+* `projects/practiceQA/automation/utils` — utilities y helpers.
+* `projects/practiceQA/automation/setup` — configuración y autenticación.
+* `projects/practiceQA/tests` — pruebas automatizadas.
+* `projects/practiceQA/tests/api` — pruebas API.
+* `playwright/.auth/user.json` — estado local de autenticación generado por Playwright.
+
+## Contributing
+
+1. Crear una nueva rama:
+
+```bash
+git checkout -b feature/nombre-feature
+```
+
+2. Realizar los cambios.
+3. Ejecutar las pruebas correspondientes.
+4. Crear el commit:
+
+```bash
+git add .
+git commit -m "feat: descripción del cambio"
+```
+
+5. Subir la rama:
+
+```bash
+git push origin feature/nombre-feature
+```
+
+6. Crear un Pull Request hacia `main`.
+
+El Pull Request debe incluir una descripción clara del cambio y las pruebas realizadas.
+
+## Author
+
+**Cirley Nava**
