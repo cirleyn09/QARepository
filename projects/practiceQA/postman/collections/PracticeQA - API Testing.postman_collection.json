@@ -1,0 +1,602 @@
+{
+  "info": {
+    "_postman_id": "7438a23e-2b15-4ccc-b2ed-10ad0275411e",
+    "name": "PracticeQA - API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54602393",
+    "_collection_link": "https://go.postman.co/collection/54602393-7438a23e-2b15-4ccc-b2ed-10ad0275411e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "01 -Authentication",
+      "item": [
+        {
+          "name": "Create User",
+          "item": [
+            {
+              "name": "Create user successfully",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\nconst requestBody = JSON.parse(pm.variables.replaceIn(pm.request.body.raw));\n\npm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Content-Type is application/json\", function () {\n    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\n});\n\npm.test(\"User ID exists\", function () {\n    pm.expect(jsonData).to.have.property(\"user\");\n    pm.expect(jsonData.user).to.have.property(\"id\");\n});\n\npm.test(\"User ID is not empty\", function () {\n    pm.expect(jsonData.user.id).to.not.be.empty;\n});\n\npm.test(\"Returned data matches sent data\", function () {\n    pm.expect(jsonData.user.email).to.eql(requestBody.email);\n    pm.expect(jsonData.user.name).to.eql(requestBody.name);\n});\n\npm.test(\"Main fields have correct data types\", function () {\n    pm.expect(jsonData.user.id).to.be.a(\"string\");\n    pm.expect(jsonData.user.email).to.be.a(\"string\");\n    pm.expect(jsonData.user.name).to.be.a(\"string\");\n    pm.expect(jsonData.user.role).to.be.a(\"string\");\n});\n\npm.test(\"Token is present\", function () {\n    pm.expect(jsonData).to.have.property(\"token\");\n    pm.expect(jsonData.token).to.be.a(\"string\").and.not.be.empty;\n});\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const random = Math.random().toString(36).substring(2, 8);\n\nconst username = `user_${random}`;\nconst email = `user_${random}@test.com`;\nconst password = \"Test1234!\";\n\npm.collectionVariables.set(\"username\", username);\npm.collectionVariables.set(\"email\", email);\npm.collectionVariables.set(\"password\", password);\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\",\"name\":\"{{username}}\"}\n\n\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/register",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Duplicate email",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 409\", function () {\n    pm.response.to.have.status(409);\n});\n\npm.test(\"Response contains error message\", function () {\n    const jsonData = pm.response.json();\n\n    pm.expect(jsonData.error).to.have.property(\"message\");\n});\n\npm.test(\"Response indicates duplicate email\", function () {\n    const jsonData = pm.response.json();\n    const responseText = JSON.stringify(jsonData).toLowerCase();\n\n    const hasExpectedMessage =\n        responseText.includes(\"already\") ||\n        responseText.includes(\"exists\") ;\n\n    pm.expect(hasExpectedMessage).to.be.true;\n});\n\npm.test(\"New user ID is not returned\", function () {\n    const jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.not.have.property(\"id\");\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"cirleyn09@gmail.com\",\"password\":\"{{password}}\",\"name\":\"{{username}}\"}\n\n\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/register",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid email format",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Response contains validation error\", function () {\n    const jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.have.property(\"error\");\n    pm.expect(jsonData.error).to.eql(\"Validation failed: Invalid email format\");\n});\n\npm.test(\"Response indicates invalid email\", function () {\n    const jsonData = pm.response.json();\n    const responseText = JSON.stringify(jsonData).toLowerCase();\n\n    pm.expect(responseText).to.include(\"email\");\n});\n\npm.test(\"User ID is not returned\", function () {\n    const jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.not.have.property(\"id\");\n});\n\n\n\n\n\n\n\n\n\n\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"email.wrong\",\"password\":\"{{password}}\",\"name\":\"{{username}}\"}\n\n\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/register",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create user without email",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\npm.test(\"El status code no debe ser 200 OK\", function () {\n    pm.response.to.not.have.status(200);\n});\n\n\npm.test(\"La respuesta debe ser JSON y no HTML\", function () {\n    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";\n    \n    pm.expect(contentType).to.include(\"application/json\");\n    pm.expect(contentType).to.not.include(\"text/html\");\n});\n\n\n\n\n\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"password\":\"{{password}}\",\"name\":\"{{username}}\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/register",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create user without password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\npm.test(\"El status code no debe ser 200 OK\", function () {\n    pm.response.to.not.have.status(200);\n});\n\n\npm.test(\"La respuesta debe ser JSON y no HTML\", function () {\n    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";\n    \n    pm.expect(contentType).to.include(\"application/json\");\n    pm.expect(contentType).to.not.include(\"text/html\");\n});\n\n   "
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"{{email}}\",\"name\":\"{{username}}\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/register",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "item": [
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\npm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\n\nconst jsonData = pm.response.json();\n\nif (jsonData.token) {\n    pm.collectionVariables.set(\"token\", jsonData.token);\n} else {\n    console.warn(\"No se encontró el token en la respuesta del login.\");\n}\n\n\npm.test(\"Response contains user identifier or token\", function () {\n    pm.expect(jsonData).to.have.property('token');\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "auth-token",
+                    "value": "{{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/login",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Empty credentials",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([400]);\n});\n\npm.test(\"Response contains validation error\", function () {\n    const jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.have.property(\"error\");\n    pm.expect(jsonData.error).to.eql(\"Validation failed: Invalid email format\");\n});\n\npm.test(\"Response indicates invalid email\", function () {\n    const jsonData = pm.response.json();\n    const responseText = JSON.stringify(jsonData).toLowerCase();\n\n    pm.expect(responseText).to.include(\"email\");\n});\n\npm.test(\"User ID is not returned\", function () {\n    const jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.not.have.property(\"id\");\n});\n\n\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "auth-token",
+                    "value": "{{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"\",\"password\":\"\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/login",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Incorrect password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\npm.test(\"El código de estado es 401 Unauthorized\", function () {\n    pm.response.to.have.status(401);\n});\n\nconst responseJson = pm.response.json();\n\npm.test(\"El campo success es false\", function () {\n    pm.expect(responseJson.success).to.be.false;\n});\n\npm.test(\"El error indica credenciales inválidas\", function () {\n    pm.expect(responseJson.error).to.be.an(\"object\");\n    pm.expect(responseJson.error.code).to.eql(\"UNAUTHORIZED\");\n    pm.expect(responseJson.error.message).to.eql(\"Invalid email or password\");\n});\n\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "auth-token",
+                    "value": "{{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"{{email}}\",\"password\":\"wrong\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/login",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Incorrect email",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"El código de estado es 401 Unauthorized\", function () {\n    pm.response.to.have.status(401);\n});\n\nconst responseJson = pm.response.json();\n\npm.test(\"El campo success es false\", function () {\n    pm.expect(responseJson.success).to.be.false;\n});\n\npm.test(\"El error indica credenciales inválidas\", function () {\n    pm.expect(responseJson.error).to.be.an(\"object\");\n    pm.expect(responseJson.error.code).to.eql(\"UNAUTHORIZED\");\n    pm.expect(responseJson.error.message).to.eql(\"Invalid email or password\");\n});\n\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "auth-token",
+                    "value": "{{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"email@wrong.com\",\"password\":\"{{password}}\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base-url}}/api/auth/login",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "item": [
+            {
+              "name": "logout",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code es 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n\npm.test(\"La respuesta es JSON válido\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"La respuesta contiene la propiedad success\", function () {\n    const jsonData = pm.response.json();\n    pm.expect(jsonData).to.have.property(\"success\");\n});\n\npm.test(\"success es true\", function () {\n    const jsonData = pm.response.json();\n    pm.expect(jsonData.success).to.eql(true);\n});\n\n\npm.test(\"El logout fue exitoso\", function () {\n    const jsonData = pm.response.json();\n    pm.expect(jsonData).to.deep.equal({\n        success: true\n    });\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base-url}}/api/auth/logout",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout without token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\npm.test(\"Status code es 401 Unauthorized\", function () {\n    pm.response.to.have.status(401);\n});\n\n\npm.test(\"El cuerpo de la respuesta indica falta de token\", function () {\n    const responseJson = pm.response.json();\n    \n\n    pm.expect(responseJson).to.be.an('object');\n    pm.expect(responseJson).to.include.keys('message'); \n});\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": ""
+                  }
+                ],
+                "url": {
+                  "raw": "{{base-url}}/api/auth/logout",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\npm.test(\"Status code is 401 Unauthorized\", function () {\n    pm.response.to.have.status(401);\n});\n\n\npm.test(\"Response has an error message\", function () {\n    var jsonData = pm.response.json();\n    \n\n    pm.expect(jsonData).to.satisfy(function(body) {\n        return body.message !== undefined || body.error !== undefined;\n    });\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "prueba123"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base-url}}/api/auth/logout",
+                  "host": [
+                    "{{base-url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "filterCategory",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\npm.test(\"El código de estado es 200\", function () {\n    pm.response.to.have.status(200);\n});\n\nconst jsonData = pm.response.json();\n\n\npm.test(\"La respuesta es un objeto con success y data\", function () {\n    pm.expect(jsonData).to.be.an('object');\n    pm.expect(jsonData).to.have.property('success', true);\n    pm.expect(jsonData).to.have.property('data');\n});\n\npm.test(\"La propiedad data es un arreglo de productos\", function () {\n    pm.expect(jsonData.data).to.be.an('array');\n});\n\n\npm.test(\"Todos los productos devuelven la categoría solicitada\", function () {\n    const categoriaFiltro = \"electronics\"; \n    const productos = jsonData.data;\n\n    if (productos.length > 0) {\n        productos.forEach((product, index) => {\n            pm.expect(\n                product.category, \n                `El producto en el índice ${index} no coincide con el filtro`\n            ).to.eql(categoriaFiltro);\n        });\n    } else {\n        console.warn(\"La búsqueda no devolvió productos para validar el filtro.\");\n    }\n});\n\n\npm.collectionVariables.unset(\"username\");\npm.collectionVariables.unset(\"email\");\npm.collectionVariables.unset(\"password\");\npm.collectionVariables.unset(\"token\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base-url}}/api/products?categories=electronics",
+              "host": [
+                "{{base-url}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "categories",
+                  "value": "electronics"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

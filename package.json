@@ -12,7 +12,8 @@
     "test:debug": "playwright test --debug",
     "report": "playwright show-report artifacts/playwright-report",
     "codegen": "playwright codegen",
-    "test:html": "playwright test --reporter=html"
+    "test:html": "playwright test --reporter=html",
+    "test:postman": "npx newman run \"projects/practiceQA/postman/collections/PracticeQA - API Testing.postman_collection.json\" -e \"projects/practiceQA/postman/environments/PracticeQA Environment.postman_environment.json\" -r htmlextra"
   },
   "keywords": [
     "playwright",
@@ -29,6 +30,8 @@
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1",
     "dotenv": "^17.4.2",
+    "newman": "^6.2.3",
+    "newman-reporter-htmlextra": "^1.23.1",
     "typescript": "^7.0.2"
   }
 }
