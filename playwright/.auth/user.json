@@ -5,17 +5,17 @@
       "value": "light",
       "domain": ".qa-practice.dev",
       "path": "/",
-      "expires": 1821037384.279778,
+      "expires": 1823542816.574468,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"
     },
     {
       "name": "auth_token",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbXRpdWJ0eWkwMDAwMDRsYXludHV5cmdkIiwiZW1haWwiOiJjaXJsZXluMDlAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3ODk1MDEzODQsImV4cCI6MTc5MDEwNjE4NH0.a9gnhYEASZEsNAhkR9anWacEJ44Ux8p-oT-jehw0ivk",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbXRpdWJ0eWkwMDAwMDRsYXludHV5cmdkIiwiZW1haWwiOiJjaXJsZXluMDlAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTIwMDY4MTgsImV4cCI6MTc5MjYxMTYxOH0.nX843M6aCp4tvwcAXtr8DTb1q8J6NAkgy7D3Sce0IzQ",
       "domain": "fullstack.qa-practice.dev",
       "path": "/",
-      "expires": 1790106184.795127,
+      "expires": 1792611618.614611,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"

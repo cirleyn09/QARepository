@@ -139,7 +139,6 @@ export default defineConfig({
           'https://fullstack.qa-practice.dev',
       },
     },
-
     {
       name: 'practiceQA-authenticated',
       testMatch: /practiceQA\/tests\/products\/.*\.spec\.ts/,
@@ -155,6 +154,8 @@ export default defineConfig({
         storageState: 'playwright/.auth/user.json',
       },
     },
+
+
 
     /*
     Este se usa para ejecutar pruebas en un dispositivo móvil específico, como un iPhone 12. 

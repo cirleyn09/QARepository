@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Portfolio Tests
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
     branches: [main, master]
 
 jobs:
-  test:
+  playwright-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
@@ -78,11 +78,36 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: Upload JUnit results
+
+  postman-tests:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install Newman and HTML reporter
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Postman API tests
+        run: >
+          newman run
+          "projects/practiceQA/postman/collections/PracticeQA - API Testing.postman_collection.json"
+          -e "projects/practiceQA/postman/environments/PracticeQA Environment.postman_environment.json"
+          --reporters cli,htmlextra
+          --reporter-htmlextra-export artifacts/postman/report.html
+
+      - name: Upload Postman HTML report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: junit-results
-          path: artifacts/junit/results.xml
+          name: postman-html-report
+          path: artifacts/postman/report.html
           if-no-files-found: ignore
           retention-days: 30
