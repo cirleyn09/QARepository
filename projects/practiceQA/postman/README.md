@@ -1,36 +1,36 @@
-# API Testing con Postman
+# API Testing with Postman
 
-La colección `PracticeQA - API Testing` valida endpoints REST de PracticeQA con requests y scripts de prueba de Postman.
+The `PracticeQA - API Testing` collection validates PracticeQA REST endpoints using Postman requests and test scripts.
 
-## Archivos
+## Files
 
-- `collections/PracticeQA - API Testing.postman_collection.json`: colección de requests y validaciones.
-- `environments/PracticeQA Environment.postman_environment.json`: environment con la variable `base-url`.
+- `collections/PracticeQA - API Testing.postman_collection.json`: collection of requests and validations.
+- `environments/PracticeQA Environment.postman_environment.json`: environment containing the `base-url` variable.
 
-## Cobertura
+## Coverage
 
-- Registro de usuarios: creación exitosa, email duplicado, formato de email inválido y campos requeridos ausentes.
-- Login: autenticación exitosa, credenciales vacías, contraseña incorrecta y email incorrecto.
-- Logout: cierre de sesión y validaciones con token ausente o inválido.
-- Productos: filtrado por categoría.
-- Validaciones automáticas de status HTTP, formato y contenido de respuesta, datos de usuario y token.
+- User registration: successful creation, duplicate email, invalid email format, and missing required fields.
+- Login: successful authentication, empty credentials, incorrect password, and incorrect email.
+- Logout: session termination and validations for missing or invalid tokens.
+- Products: filtering by category.
+- Automated validations of HTTP status codes, response format and content, user data, and tokens.
 
-El registro genera un nombre y un email únicos por ejecución. El login almacena el token como variable de colección para las solicitudes autenticadas.
+Registration generates a unique name and email for each run. Login stores the token as a collection variable for authenticated requests.
 
-## Ejecutar en Postman
+## Running in Postman
 
-1. Importa la colección `collections/PracticeQA - API Testing.postman_collection.json`.
-2. Importa `environments/PracticeQA Environment.postman_environment.json` y selecciona el environment `PracticeQA Environment`.
-3. Confirma que `base-url` apunte al host de la API, sin protocolo. El valor incluido es `fullstack.qa-practice.dev`.
-4. Ejecuta un request individual o toda la colección mediante Collection Runner.
+1. Import the `collections/PracticeQA - API Testing.postman_collection.json` collection.
+2. Import `environments/PracticeQA Environment.postman_environment.json` and select the `PracticeQA Environment` environment.
+3. Confirm that `base-url` points to the API host without the protocol. The included value is `fullstack.qa-practice.dev`.
+4. Run an individual request or the entire collection using Collection Runner.
 
-## Ejecutar con Newman
+## Running with Newman
 
-Desde la raíz del repositorio, instala las dependencias si aún no lo has hecho y ejecuta:
+From the repository root, install the dependencies if you have not already done so, then run:
 
 ```bash
 npm install
 npm run test:postman
 ```
 
-El script del proyecto invoca Newman con esta colección y environment, y usa el reporter `htmlextra`.
+The project script runs Newman with this collection and environment, using the `htmlextra` reporter.
